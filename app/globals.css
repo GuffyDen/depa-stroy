@@ -1424,8 +1424,10 @@ select:focus-visible {
   }
 
   .comparison {
-    aspect-ratio: 0.92 / 1;
-    min-height: 500px;
+    aspect-ratio: auto;
+    height: min(125vw, 500px);
+    min-height: 0;
+    width: 100%;
   }
 
   .comparison-facts {

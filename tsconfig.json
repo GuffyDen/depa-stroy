@@ -38,6 +38,8 @@
     "examples",
     "tests",
     "worker",
+    "app/page 3.tsx",
+    "app/site-config 2.ts",
     "vite.config.ts",
     "drizzle.config.ts"
   ]

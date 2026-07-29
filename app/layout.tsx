@@ -4,26 +4,27 @@ import { companyConfig } from "./site-config";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://depa-stroy.vercel.app"),
-  title: `${companyConfig.brandName} — пространства, в которых хочется жить`,
+  title: `${companyConfig.brandName} — ремонт квартир под ключ во Владивостоке`,
   description:
-    "Современные частные интерьеры во Владивостоке: комплексный ремонт квартир под ключ, продуманный до последней детали.",
+    "Ремонт квартир под ключ, дизайн, комплектация и приёмка квартиры от застройщика во Владивостоке.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
   },
   openGraph: {
-    title: `${companyConfig.brandName} — пространства, в которых хочется жить`,
+    title: `${companyConfig.brandName} — квартира, готовая к жизни`,
     description:
-      "Создаём современные частные интерьеры, продуманные до последней детали.",
+      "Ремонт квартир под ключ и приёмка от застройщика во Владивостоке.",
     type: "website",
     locale: "ru_RU",
-    images: [{ url: "/og.png", width: 1536, height: 1024 }],
+    images: [{ url: "/images/v2/og.jpg", width: 1400, height: 735 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${companyConfig.brandName} — пространства, в которых хочется жить`,
-    description: "Современные частные интерьеры во Владивостоке.",
-    images: ["/og.png"],
+    title: `${companyConfig.brandName} — квартира, готовая к жизни`,
+    description:
+      "Ремонт квартир под ключ и приёмка от застройщика во Владивостоке.",
+    images: ["/images/v2/og.jpg"],
   },
 };
 

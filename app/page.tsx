@@ -1,310 +1,349 @@
-"use client";
-
 import Image from "next/image";
-import { FormEvent, useEffect, useState } from "react";
-import { Logo } from "./components/Logo";
-import { companyConfig, disciplines, materialStories, navItems } from "./site-config";
+import { ContactForm } from "./components/ContactForm";
+import {
+  acceptanceChecks,
+  companyConfig,
+  navItems,
+  process,
+  services,
+} from "./site-config";
 
-const principles = [
-  {
-    number: "01",
-    title: "Архитектура до декора",
-    text: "Сначала выстраиваем объём, свет и маршруты. Предметы появляются только там, где они усиливают пространство.",
-  },
-  {
-    number: "02",
-    title: "Материал без имитации",
-    text: "Работаем с камнем, деревом, стеклом и металлом так, чтобы они красиво жили и старели.",
-  },
-  {
-    number: "03",
-    title: "Тишина в деталях",
-    text: "Инженерия, хранение и свет интегрированы в архитектуру и не требуют внимания владельца.",
-  },
-] as const;
+function ArrowIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M5 19 19 5M8 5h11v11" />
+    </svg>
+  );
+}
+
+function BrandMark() {
+  return (
+    <span className="brand-mark" aria-label={companyConfig.brandName}>
+      <span>ДеПа</span>
+      <span>Строй</span>
+    </span>
+  );
+}
 
 export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.12 },
-    );
-
-    document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
-  }, []);
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setSubmitted(true);
-    event.currentTarget.reset();
-  };
-
   return (
     <main>
+      <a className="skip-link" href="#content">
+        Перейти к содержанию
+      </a>
+
       <section className="hero" id="top" aria-labelledby="hero-title">
         <header className="site-header">
-          <a
-            className="header-logo"
-            href="#top"
-            aria-label={`${companyConfig.brandName}, на главную`}
-          >
-            <Logo variant="light-background" showTagline={false} />
+          <a className="header-brand" href="#top">
+            <BrandMark />
           </a>
 
-          <nav
-            className={`desktop-nav ${menuOpen ? "is-open" : ""}`}
-            aria-label="Основная навигация"
-          >
+          <nav className="desktop-nav" aria-label="Основная навигация">
             {navItems.map((item) => (
-              <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
+              <a key={item.href} href={item.href}>
                 {item.label}
               </a>
             ))}
           </nav>
 
-          <a className="header-cta" href="#contact">
-            Обсудить проект
-            <span aria-hidden="true">↗</span>
+          <a className="header-contact" href="#contact">
+            Начать проект
+            <ArrowIcon />
           </a>
 
-          <button
-            className="menu-toggle"
-            type="button"
-            aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((value) => !value)}
-          >
-            <span>{menuOpen ? "Закрыть" : "Меню"}</span>
-            <i aria-hidden="true" />
-          </button>
+          <details className="mobile-menu">
+            <summary>Меню</summary>
+            <nav aria-label="Мобильная навигация">
+              {navItems.map((item) => (
+                <a key={item.href} href={item.href}>
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+          </details>
         </header>
 
-        <div className="hero-grid">
+        <div className="hero-layout" id="content">
           <div className="hero-copy">
-            <div className="eyebrow">
-              <span>Частные интерьеры</span>
+            <div className="hero-overline">
+              <span>{companyConfig.serviceLine}</span>
               <span>{companyConfig.city}</span>
             </div>
 
             <h1 id="hero-title">
-              Пространства,
+              Квартира,
               <br />
-              в которых
+              готовая
               <br />
-              хочется жить.
+              <em>к жизни.</em>
             </h1>
 
-            <div className="hero-bottom">
+            <div className="hero-intro">
               <p>
-                Комплексный ремонт квартир под ключ.
-                <br />
-                Создаём современные интерьеры, продуманные до последней детали.
+                Проектируем и реализуем современные квартиры целиком — от пустых
+                стен до последней детали.
               </p>
               <div className="hero-actions">
-                <a className="button button-solid" href="#contact">
+                <a className="button button-orange" href="#contact">
                   Обсудить проект
-                  <span aria-hidden="true">↗</span>
+                  <ArrowIcon />
                 </a>
-                <a className="button button-line" href="#spaces">
-                  Наши работы
+                <a className="button button-ghost" href="#services">
+                  Посмотреть услуги
                 </a>
               </div>
             </div>
           </div>
 
-          <figure className="hero-image">
-            <div className="hero-image-frame">
-              <Image
-                src="/images/poliform-living.jpg"
-                alt="Современная гостиная с натуральным деревом, камнем и панорамным остеклением"
-                fill
-                priority
-                sizes="(max-width: 840px) 100vw, 56vw"
-              />
-            </div>
+          <figure className="hero-visual">
+            <Image
+              src="/images/v2/hero-vladivostok.jpg"
+              alt="Современная квартира с панорамным видом на Владивосток"
+              fill
+              priority
+              sizes="(max-width: 900px) 100vw, 50vw"
+            />
             <figcaption>
-              <span>Резиденция 01</span>
-              <span>Архитектура · Материал · Свет</span>
-              <span>Дальний Восток</span>
+              <span>43°07′ N</span>
+              <span>Владивосток</span>
             </figcaption>
           </figure>
+
+          <aside className="hero-code" aria-label="Направления работы">
+            <span>VVO / 001</span>
+            <p>Ремонт</p>
+            <p>Дизайн</p>
+            <p>Приёмка</p>
+          </aside>
         </div>
 
-        <a className="scroll-cue" href="#manifesto" aria-label="Перейти к следующему разделу">
-          <span>Смотреть проект</span>
-          <i aria-hidden="true" />
-        </a>
+        <div className="hero-ticker" aria-hidden="true">
+          <span>ПРОСТРАНСТВО</span>
+          <i />
+          <span>ТОЧНОСТЬ</span>
+          <i />
+          <span>ГОТОВНОСТЬ</span>
+          <i />
+          <span>ВЛАДИВОСТОК</span>
+        </div>
       </section>
 
-      <section className="manifesto section-pad" id="manifesto">
-        <div className="section-meta reveal">
+      <section className="services" id="services">
+        <div className="section-index">
           <span>01</span>
-          <span>Манифест</span>
+          <span>Что мы делаем</span>
         </div>
-        <div className="manifesto-content reveal">
-          <p className="manifesto-lead">
-            Жизнь меняется, когда пространство перестаёт быть фоном.
-          </p>
-          <div className="manifesto-note">
-            <span className="accent-dot" aria-hidden="true" />
-            <p>
-              Мы создаём не набор эффектных решений, а цельную среду — спокойную,
-              точную и естественную для человека, который будет в ней жить.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="spaces section-pad" id="spaces">
-        <div className="section-heading reveal">
-          <div className="section-meta">
-            <span>02</span>
-            <span>Пространства</span>
-          </div>
-          <h2>Материал говорит тише. И остаётся дольше.</h2>
-          <p>
-            Три основы интерьера, который не устаревает вместе с визуальными трендами.
-          </p>
-        </div>
-
-        <div className="editorial-grid">
-          {materialStories.map((story, index) => (
-            <figure className={`space-story space-story-${index + 1} reveal`} key={story.title}>
-              <div className="space-image">
-                <Image
-                  src={story.image}
-                  alt={story.alt}
-                  fill
-                  sizes={
-                    index === 0
-                      ? "(max-width: 840px) 100vw, 62vw"
-                      : "(max-width: 840px) 100vw, 34vw"
-                  }
-                />
-              </div>
-              <figcaption>
-                <span>0{index + 1}</span>
-                <h3>{story.title}</h3>
-                <p>{story.note}</p>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
-
-      <section className="principles section-pad" id="principles">
-        <div className="principles-title reveal">
-          <div className="section-meta section-meta-light">
-            <span>03</span>
-            <span>Принципы</span>
-          </div>
+        <div className="services-heading">
           <h2>
-            Ничего
+            От ключей
             <br />
-            случайного.
+            до новоселья.
           </h2>
           <p>
-            Роскошь здесь — не количество деталей, а точность каждого решения.
+            Не соединяем разрозненных подрядчиков. Собираем одну команду и один
+            управляемый процесс вокруг вашей квартиры.
           </p>
         </div>
 
-        <div className="principles-list">
-          {principles.map((principle) => (
-            <article className="principle-row reveal" key={principle.number}>
-              <span>{principle.number}</span>
-              <h3>{principle.title}</h3>
-              <p>{principle.text}</p>
+        <div className="service-list">
+          {services.map((service) => (
+            <article className="service-item" key={service.number}>
+              <span className="service-number">{service.number}</span>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+              <span className="service-meta">{service.meta}</span>
+              <span className="service-arrow">
+                <ArrowIcon />
+              </span>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="cinema">
-        <div className="cinema-image reveal">
-          <Image
-            src="/images/premium-wood.jpg"
-            alt="Архитектурная композиция из натурального дерева и мягкого света"
-            fill
-            sizes="100vw"
-          />
+      <section className="visual-story" aria-labelledby="visual-title">
+        <div className="visual-story-head">
+          <div className="section-index section-index-light">
+            <span>02</span>
+            <span>Визуальный язык</span>
+          </div>
+          <h2 id="visual-title">
+            Материалы
+            <br />
+            вместо декора.
+          </h2>
+          <p>
+            Камень, дерево, металл и свет. Чем точнее основа, тем меньше интерьеру
+            нужны визуальные эффекты.
+          </p>
         </div>
-        <div className="cinema-caption">
-          <span>Свет как архитектурный материал</span>
-          <span>Дерево · Камень · Воздух</span>
+
+        <div className="visual-grid">
+          <figure className="visual-large">
+            <Image
+              src="/images/v2/kitchen.jpg"
+              alt="Кухня из натурального дерева, металла и кобальтового стекла"
+              fill
+              sizes="(max-width: 800px) 100vw, 66vw"
+            />
+            <figcaption>
+              <span>Объём / Свет / Функция</span>
+              <span>01—03</span>
+            </figcaption>
+          </figure>
+          <figure className="visual-tall">
+            <Image
+              src="/images/v2/bathroom.jpg"
+              alt="Современная ванная из камня, дерева и рифлёного стекла"
+              fill
+              sizes="(max-width: 800px) 100vw, 34vw"
+            />
+            <figcaption>
+              <span>Тактильность / Точность</span>
+              <span>02—03</span>
+            </figcaption>
+          </figure>
         </div>
       </section>
 
-      <section className="approach section-pad" id="approach">
-        <div className="approach-intro reveal">
-          <div className="section-meta">
-            <span>04</span>
-            <span>Единый процесс</span>
+      <section className="approach" id="approach">
+        <div className="approach-sticky">
+          <div className="section-index">
+            <span>03</span>
+            <span>Как всё устроено</span>
           </div>
-          <h2>Один замысел. Одна команда. Один результат.</h2>
+          <h2>
+            Один процесс.
+            <br />
+            Без хаоса.
+          </h2>
           <p>
-            Берём на себя весь путь — от первых пространственных решений до момента,
-            когда можно открыть дверь и начать жить.
+            У проекта есть логика, бюджет, сроки и человек, который отвечает за
+            результат.
           </p>
         </div>
 
         <div className="process-list">
-          {disciplines.map((item) => (
-            <article className="process-step reveal" key={item.number}>
+          {process.map((item) => (
+            <article className="process-item" key={item.number}>
               <span>{item.number}</span>
               <h3>{item.title}</h3>
-              <p>{item.description}</p>
+              <p>{item.text}</p>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="statement section-pad">
-        <div className="statement-copy reveal">
-          <p className="statement-kicker">{companyConfig.brandName}</p>
-          <h2>Пространство — самая личная форма качества жизни.</h2>
-          <a className="text-link" href="#contact">
-            Начать разговор
-            <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-        <div className="statement-image reveal">
+      <section className="acceptance" id="acceptance">
+        <div className="acceptance-image">
           <Image
-            src="/images/poliform-bedroom.jpg"
-            alt="Спальня в тёплой нейтральной палитре с панелями из натурального дерева"
+            src="/images/v2/acceptance.jpg"
+            alt="Специалист проверяет квартиру от застройщика лазерным уровнем"
             fill
-            sizes="(max-width: 840px) 100vw, 48vw"
+            sizes="(max-width: 900px) 100vw, 48vw"
           />
+          <span className="acceptance-tag">Новая услуга</span>
+        </div>
+
+        <div className="acceptance-copy">
+          <div className="section-index section-index-blue">
+            <span>04</span>
+            <span>Приёмка квартиры</span>
+          </div>
+          <h2>
+            Сначала
+            <br />
+            проверить.
+            <br />
+            Потом принять.
+          </h2>
+          <p className="acceptance-lead">
+            Помогаем принять квартиру у застройщика без спешки и эмоций. Проверяем
+            то, что сложно оценить на первой встрече, и фиксируем замечания.
+          </p>
+
+          <ul>
+            {acceptanceChecks.map((item) => (
+              <li key={item}>
+                <span aria-hidden="true" />
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <a className="button button-dark" href="#contact">
+            Записаться на приёмку
+            <ArrowIcon />
+          </a>
         </div>
       </section>
 
-      <section className="contact section-pad" id="contact">
-        <div className="contact-left">
-          <div className="contact-copy reveal">
-            <div className="section-meta section-meta-light">
-              <span>05</span>
-              <span>Личный контакт</span>
-            </div>
-            <h2>Обсудим ваш проект</h2>
+      <section className="principles" aria-labelledby="principles-title">
+        <div className="section-index section-index-light">
+          <span>05</span>
+          <span>Три опоры</span>
+        </div>
+        <h2 id="principles-title">
+          Не обещания.
+          <br />
+          Система.
+        </h2>
+        <div className="principle-grid">
+          <article>
+            <span>01</span>
+            <h3>Единый бюджет</h3>
             <p>
-              Расскажите о квартире или доме. Мы свяжемся с вами, обсудим задачу и
-              предложим оптимальный сценарий реализации.
+              Смета объединяет работы, материалы и комплектацию. Изменения не
+              появляются без согласования.
             </p>
-          </div>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Личный руководитель</h3>
+            <p>
+              Один человек держит контекст проекта и остаётся вашим главным
+              контактом на всех этапах.
+            </p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Проверяемый результат</h3>
+            <p>
+              Решения фиксируются до реализации, а каждый этап принимается прежде,
+              чем команда двигается дальше.
+            </p>
+          </article>
+        </div>
+      </section>
 
-          <div className="contact-people reveal">
+      <section className="contact" id="contact">
+        <div className="contact-title">
+          <div className="section-index">
+            <span>06</span>
+            <span>Начало проекта</span>
+          </div>
+          <h2>
+            Давайте
+            <br />
+            обсудим
+            <br />
+            квартиру.
+          </h2>
+          <p>
+            Расскажите, где находится объект и что хотите получить. Мы зададим
+            несколько точных вопросов и предложим следующий шаг.
+          </p>
+        </div>
+
+        <div className="contact-panel">
+          <ContactForm />
+
+          <div className="contact-people">
+            <div className="people-heading">
+              <span>Можно позвонить напрямую</span>
+              <p>На связи руководители проектов</p>
+            </div>
             {companyConfig.contacts.projectLeads.map((person, index) => (
-              <article className="person" key={person.phoneRaw}>
+              <article className="person-card" key={person.phoneRaw}>
                 <span>0{index + 1}</span>
                 <div>
                   <h3>{person.name}</h3>
@@ -315,93 +354,22 @@ export default function Home() {
                   aria-label={`Позвонить: ${person.name}, ${person.phone}`}
                 >
                   {person.phone}
-                  <span aria-hidden="true">↗</span>
+                  <ArrowIcon />
                 </a>
               </article>
             ))}
-
-            <div className="future-channels" aria-label="Будущие каналы связи">
-              <span>Другие способы связи</span>
-              <div>
-                {companyConfig.contacts.futureChannels.map((channel) => (
-                  <span key={channel}>{channel}</span>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
-
-        <form className="contact-form reveal" onSubmit={handleSubmit}>
-          <div className="form-heading">
-            <span>Оставить заявку</span>
-            <p>Ответим и согласуем удобное время для разговора.</p>
-          </div>
-
-          <label>
-            <span>Имя</span>
-            <input name="name" type="text" autoComplete="name" required />
-          </label>
-          <label>
-            <span>Телефон</span>
-            <input name="phone" type="tel" autoComplete="tel" required />
-          </label>
-          <label>
-            <span>Площадь квартиры</span>
-            <input name="area" type="text" inputMode="numeric" />
-          </label>
-          <label>
-            <span>Тип объекта</span>
-            <select name="objectType" defaultValue="" required>
-              <option value="" disabled>
-                Выберите тип объекта
-              </option>
-              <option>Квартира без отделки</option>
-              <option>Квартира с готовым ремонтом</option>
-              <option>Апартаменты</option>
-              <option>Частный дом</option>
-            </select>
-          </label>
-          <label>
-            <span>Комментарий</span>
-            <textarea name="comment" rows={3} />
-          </label>
-
-          <label className="consent">
-            <input type="checkbox" required />
-            <span>
-              Согласен(а) на обработку персональных данных. Форма пока работает в
-              демонстрационном режиме.
-            </span>
-          </label>
-
-          <button className="submit-button" type="submit">
-            Обсудить проект
-            <span aria-hidden="true">↗</span>
-          </button>
-
-          {submitted && (
-            <p className="form-status" role="status">
-              Спасибо. Заявка подготовлена — подключение отправки будет следующим шагом.
-            </p>
-          )}
-        </form>
       </section>
 
       <footer className="footer">
-        <a className="footer-logo" href="#top">
-          <Logo variant="dark-background" />
+        <a className="footer-brand" href="#top">
+          <BrandMark />
         </a>
-        <nav aria-label="Навигация в подвале">
-          {navItems.map((item) => (
-            <a key={item.href} href={item.href}>
-              {item.label}
-            </a>
-          ))}
-        </nav>
-        <div className="footer-meta">
-          <span>© {new Date().getFullYear()} {companyConfig.brandName}</span>
+        <p>Ремонт квартир под ключ и приёмка от застройщика</p>
+        <div>
           <span>{companyConfig.city}</span>
-          <span>{companyConfig.legalName}</span>
+          <span>© {new Date().getFullYear()}</span>
         </div>
       </footer>
     </main>
